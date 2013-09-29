@@ -59,13 +59,22 @@ $(document).ready(function () {
     processData('decrypt', fileInfo.text).done(function (plaintext) {
       var arrayBuffer = new ArrayBuffer(plaintext.length);
       var arrayBufferView = new Uint8Array(arrayBuffer);
-      for (var i = 0; i < decodedBinaryString.length; i++) {
-        arrayBufferView[i] = decodedBinaryString.charCodeAt(i);
+      for (var i = 0; i < plaintext.length; i++) {
+        arrayBufferView[i] = plaintext.charCodeAt(i);
       }
       var blob = new Blob([arrayBuffer], { type: fileInfo.type });
       saveAs(blob, fileInfo.name);
     });
   }
+
+  $("#text").on('keyup change', function() {
+    chrome.storage.sync.set({ 'text': $(this).val() });
+    if ($(this).val().length > 0) {
+      $("#dropzone").hide();
+    } else {
+      $("#dropzone").show();
+    }
+  });
 
   $("#encrypt").click(function() {
     if (loadedFile) {
@@ -108,6 +117,8 @@ $(document).ready(function () {
   $("#clear").click(function() {
     $("#text").val("");
     chrome.storage.sync.remove('text');
+    $("#dropzone").text("Drop a file or click here");
+    loadedFile = null;
   });
 
   $("#passphrase-visible").change(function () {
@@ -121,9 +132,6 @@ $(document).ready(function () {
   // Store and load previous text
   chrome.storage.sync.get(['keep', 'text'], function (items) {
     if (items['keep']) {
-      $("#text").on('keyup change', function() {
-        chrome.storage.sync.set({ 'text': $("#text").val() });
-      });
       $("#text")
         .val(items['text'])
         .select();
@@ -137,13 +145,14 @@ $(document).ready(function () {
     on: {
       load: function(e, file) {
         // triggered each time the reading operation is successfully completed
-        if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) && file.size < 2 * Math.pow(1024, 2))) {
+        if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) > -1 && file.size < 2 * Math.pow(1024, 2))) {
           loadedFile = { file: file, content: e.target.result };
           var fileInfo = [
             escape(file.name), ' - ',
             (file.size / 1000).toFixed(1), ' KB'
           ].join('');
           $('#dropzone').html(fileInfo);
+          $("#text").hide();
         } else {
           alert("Uploaded file is too large. Files must be less than 1 MB.");
         }
