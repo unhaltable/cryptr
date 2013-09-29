@@ -18,7 +18,6 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 
 function launchPopup(callback) {
   chrome.windows.getCurrent(function (currentWindow) {
-    // var width = screen.width / 2 - 310 / 2;
     var width = screen.width - 350;
     var height = screen.height / 2 - 440 / 2;
     chrome.windows.create({
@@ -62,7 +61,7 @@ chrome.windows.onFocusChanged.addListener(function (newWindowId) {
     populate: true
   }, function (windows) {
     for (var i = 0; i < windows.length; i++) {
-      // If the Cryptr popup is not focused...
+      // If the Cryptr popup is not focused
       if (!windows[i].focused && windows[i].type == "popup" && windows[i].tabs[0].url == chrome.extension.getURL('popup.html')) {
         for (var j = 0; j < windows.length; j++) {
           // If another normal window is focused

@@ -1,6 +1,6 @@
 var storage = chrome.storage.sync;
 
-var cypher = document.querySelector("#typevals");
+var cipher = document.querySelector("#typevals");
 $("#typevals").change(saveOptions);
 var keep = document.querySelector("#keep");
 $("#keep").change(saveOptions);
@@ -10,9 +10,9 @@ var arr = [];
 loadSettings();
 
 function loadSettings() {
-  storage.get(['cypher', 'pass', 'keep'], function (items) {
-    if (items['cypher']) {
-      cypher.value = items['cypher'];
+  storage.get(['cipher', 'pass', 'keep'], function (items) {
+    if (items['cipher']) {
+      cipher.value = items['cipher'];
     }
     if (items['pass']) {
       arr = items['pass'];
@@ -34,7 +34,7 @@ function loadSettings() {
 }
 
 function saveOptions() {
-  storage.set({'cypher': cypher.value });
+  storage.set({'cipher': cipher.value });
   storage.set({'keep': keep.checked });
 }
 

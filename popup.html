@@ -7,6 +7,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 <body>
+  <div id="overlay"></div>
   <header>
     <span id="logo">Cryptr</span>
     <div id="options" title="Cryptr options"></div>
@@ -18,11 +19,13 @@
       <button id="clear" title="Clear textbox">Clear</button>
     </div>
     <input type="file" id="file" multiple />
-    <div id="dropzone" title="Drag and drop a file here, or click here to browse for a file.">Drop files or click here</div>
+    <div id="dropzone" title="Drag and drop a file here, or click here to browse for a file.">Drop a file or click here</div>
     <output id="list"></output>
   </article>
   <article id="settings">
-    <input class="textbox" id="passphrase" type="text" placeholder="Enter a passphrase" />
+    <input class="textbox" id="passphrase" type="password" placeholder="Enter a passphrase" />
+    <input id="passphrase-visible" type="checkbox" />
+    <label for="passphrase-visible" class="eye" title="Toggle passphrase visibility">Test</label>
     <button id="random" title="Generate a random passphrase"></button>
   </article>
   <footer>

@@ -2,12 +2,6 @@ var loadedFile; // loaded file in object: { file: File, content: File content }
 
 $(document).ready(function () {
 
-  chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-    if (message.type == "selectionText") {
-      $("#text").val(message.text);
-    }
-  });
-
   function randomPass() {
     var pass = "";
     for (i = 0; i < 20; i++) {
@@ -48,25 +42,28 @@ $(document).ready(function () {
   }
 
   function encryptAndDownloadFile() {
-    var base64plaintext = window.btoa(loadedFile.content);
-    processData('encrypt', base64plaintext).done(function (ciphertext) {
-      var blob = new Blob([ciphertext]);
+    processData('encrypt', loadedFile.content).done(function (ciphertext) {
+      var jsonString = JSON.stringify({
+        name: loadedFile.file.name,
+        type: loadedFile.file.type,
+        text: ciphertext
+      });
+      var blob = new Blob([jsonString]);
       // call saveAs, part of FileSaver.js
       saveAs(blob, loadedFile.file.name + '.cryptr');
     });
   }
 
   function decryptAndDownloadFile() {
-    // decrypt base64-encoded string from loadedFile
-    processData('decrypt', loadedFile.content).done(function (base64plaintext) {
-      var decodedBinaryString = window.atob(base64plaintext);
-      var arrayBuffer = new ArrayBuffer(decodedBinaryString.length);
+    var fileInfo = JSON.parse(loadedFile.content);
+    processData('decrypt', fileInfo.text).done(function (plaintext) {
+      var arrayBuffer = new ArrayBuffer(plaintext.length);
       var arrayBufferView = new Uint8Array(arrayBuffer);
       for (var i = 0; i < decodedBinaryString.length; i++) {
         arrayBufferView[i] = decodedBinaryString.charCodeAt(i);
       }
-      var blob = new Blob([arrayBuffer]);
-      saveAs(blob, file.name);
+      var blob = new Blob([arrayBuffer], { type: fileInfo.type });
+      saveAs(blob, fileInfo.name);
     });
   }
 
@@ -89,7 +86,6 @@ $(document).ready(function () {
     } else if ($("#text").val().length) {
       processData('decrypt', $("#text").val()).done(function (plaintext) {
         $("#text").val(plaintext);
-        copyText();
       });
     } else {
       alert("Please enter either text or a file.");
@@ -98,6 +94,7 @@ $(document).ready(function () {
 
   $("#random").click(function() {
     $('#passphrase').val(randomPass());
+    $("#passphrase").attr('type', 'text');
   });
 
   $("#options").click(function() {
@@ -113,10 +110,18 @@ $(document).ready(function () {
     chrome.storage.sync.remove('text');
   });
 
+  $("#passphrase-visible").change(function () {
+    if ($("#passphrase").attr('type') == 'text') {
+      $("#passphrase").attr('type', 'password');
+    } else {
+      $("#passphrase").attr('type', 'text');
+    }
+  });
+
   // Store and load previous text
   chrome.storage.sync.get(['keep', 'text'], function (items) {
     if (items['keep']) {
-      $("#text").change(function() {
+      $("#text").on('keyup change', function() {
         chrome.storage.sync.set({ 'text': $("#text").val() });
       });
       $("#text")
@@ -132,23 +137,29 @@ $(document).ready(function () {
     on: {
       load: function(e, file) {
         // triggered each time the reading operation is successfully completed
-        loadedFile = { file: file, content: e.target.result };
-        var fileInfo = [
-          '<ul>',
-          '<li><strong>', escape(file.name), '</strong> - ',
-          file.size, ' bytes',
-          '</li>',
-          '</ul>'
-        ].join('');
-        $('#list').html(fileInfo);
-        $("#dropzone").hide();
+        if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) && file.size < 2 * Math.pow(1024, 2))) {
+          loadedFile = { file: file, content: e.target.result };
+          var fileInfo = [
+            escape(file.name), ' - ',
+            (file.size / 1000).toFixed(1), ' KB'
+          ].join('');
+          $('#dropzone').html(fileInfo);
+        } else {
+          alert("Uploaded file is too large. Files must be less than 1 MB.");
+        }
       }
     }
   };
 
-  $("#file, #dropzone").fileReaderJS(fileReaderOptions);
+  $("#file, body, .lightbox, .lightbox-faded").fileReaderJS(fileReaderOptions);
   $("#dropzone").click(function () {
     $("#file").click();
   });
 
+});
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.type == "selectionText") {
+    $("#text").val(message.text);
+  }
 });
