@@ -1,6 +1,6 @@
 {
   "name": "Cryptr",
-  "version": "0.9",
+  "version": "0.9.1",
   "description": "Easy encryption.",
   "manifest_version": 2,
   "options_page": "options.html",

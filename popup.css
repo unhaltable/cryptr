@@ -154,7 +154,7 @@ header {
 
   #passphrase {
     background: #cee6e9;
-    width: calc(100% - 75px);
+    width: calc(100% - 45px);
   }
 
   #passphrase-visible {
@@ -172,9 +172,12 @@ header {
     background: transparent url(img/eye.png) no-repeat;
     border-radius: 0 5px 5px 0;
     padding: 6px 5px 5px 22px;
+    float: right;
     font-size: 0;
-    margin: 0 3px;
+    margin: 4px 3px;
     opacity: 0.6;
+    position: absolute;
+    right: 38px;
     transition: opacity 0.15s;
   }
 
