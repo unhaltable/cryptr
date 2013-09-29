@@ -168,9 +168,19 @@ header {
     border: 0;
   }
 
-  #passphrase-visible:checked + .eye {
-    background-position: 0 0;
+  .eye {
+    background: transparent url(img/eye.png) no-repeat;
+    border-radius: 0 5px 5px 0;
+    padding: 6px 5px 5px 22px;
+    font-size: 0;
+    margin: 0 3px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
   }
+
+    .eye:hover {
+      opacity: 1;
+    }
 
   #passphrase-visible + .eye {
     background-position: 0 -27px;
@@ -182,19 +192,9 @@ header {
     vertical-align: middle;
   }
 
-  .eye {
-    background: transparent url(img/eye.png) no-repeat;
-    border-radius: 0 5px 5px 0;
-    padding: 6px 5px 5px 22px;
-    font-size: 0;
-    margin: 0 3px;
-    opacity: 0.6;
-    transition: opacity 0.15s;
-  }
-
-  .eye:hover {
-    opacity: 1;
-  }
+    #passphrase-visible:checked + .eye {
+      background-position: 0 0;
+    }
 
   #random {
     background: #cee6e9 url(img/random.png) no-repeat;

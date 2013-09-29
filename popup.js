@@ -119,6 +119,8 @@ $(document).ready(function () {
     chrome.storage.sync.remove('text');
     $("#dropzone").text("Drop a file or click here");
     loadedFile = null;
+    $("#text").show();
+    $("#copy").show();
   });
 
   $("#passphrase-visible").change(function () {
@@ -153,6 +155,7 @@ $(document).ready(function () {
           ].join('');
           $('#dropzone').html(fileInfo);
           $("#text").hide();
+          $("#copy").hide();
         } else {
           alert("Uploaded file is too large. Files must be less than 1 MB.");
         }
