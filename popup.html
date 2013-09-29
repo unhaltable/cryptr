@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cryptr</title>
+  <link rel="stylesheet" type="text/css" href="popup.css">
+  <link rel="stylesheet" type="text/css" href="scrollbar.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+  <header>
+    <span id="logo">Cryptr</span>
+    <div id="options" title="Cryptr options"></div>
+  </header>
+  <article id="box">
+    <textarea class="textbox" name="text" id="text" cols="30" rows="6" placeholder="Enter text to encrypt or decrypt" autofocus></textarea>
+    <div id="textbtns">
+      <button id="copy" title="Copy text">Copy</button>
+      <button id="clear" title="Clear textbox">Clear</button>
+    </div>
+    <input type="file" id="file" multiple />
+    <div id="dropzone" title="Drag and drop a file here, or click here to browse for a file.">Drop files or click here</div>
+    <output id="list"></output>
+  </article>
+  <article id="settings">
+    <input class="textbox" id="passphrase" type="text" placeholder="Enter a passphrase" />
+    <button id="random" title="Generate a random passphrase"></button>
+  </article>
+  <footer>
+    <button id="encrypt" title="Encrypt"></button>
+    <button id="decrypt" title="Decrypt"></button>
+  </footer>
+  <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="filereader.js"></script>
+  <script type="text/javascript" src="FileSaver.js"></script>
+  <script type="text/javascript" src="cryptojs/rollups/aes.js"></script>
+  <script type="text/javascript" src="popup.js"></script>
+</body>
+</html>
