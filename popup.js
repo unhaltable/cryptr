@@ -104,6 +104,7 @@ $(document).ready(function () {
   $("#random").click(function() {
     $('#passphrase').val(randomPass());
     $("#passphrase").attr('type', 'text');
+    $("#passphrase-visible").prop('checked', true);
   });
 
   $("#options").click(function() {

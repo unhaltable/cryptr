@@ -38,6 +38,13 @@ function saveOptions() {
   storage.set({'keep': keep.checked });
 }
 
+$("#addpass").keydown(function (e) {
+  if (e.which == 13) {
+    $("#save").click();
+    $("#name").focus();
+  }
+});
+
 $("#save").click(function() {
   var name = $("#name").val();
   var pass = $("#pass").val();
