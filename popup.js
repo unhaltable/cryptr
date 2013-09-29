@@ -87,7 +87,7 @@ $(document).ready(function () {
     if (loadedFile) {
       decryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
-      processData('encrypt', $("#text").val()).done(function (plaintext) {
+      processData('decrypt', $("#text").val()).done(function (plaintext) {
         $("#text").val(plaintext);
         copyText();
       });
@@ -141,6 +141,7 @@ $(document).ready(function () {
           '</ul>'
         ].join('');
         $('#list').html(fileInfo);
+        $("#dropzone").hide();
       }
     }
   };
@@ -151,4 +152,3 @@ $(document).ready(function () {
   });
 
 });
-
