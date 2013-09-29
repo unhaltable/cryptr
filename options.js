@@ -19,7 +19,7 @@ function loadSettings() {
       for (i = 0; i < arr.length; i++) {
         $("#saved").append("<li id='" + i + "'><span class='first'>" + arr[i][0] + "</span>" + arr[i][1]
                             + "<div class='del'></div></li>");
-        $('#' + i + ' .del').click(function() {
+        $('#' + i + ' .del').click(function () {
           $(this).parent().css("display", "none");
           var pos = arr.indexOf(i);
           if (~arr) arr.splice(pos, 1);
@@ -45,7 +45,7 @@ $("#addpass").keydown(function (e) {
   }
 });
 
-$("#save").click(function() {
+$("#save").click(function () {
   var name = $("#name").val();
   var pass = $("#pass").val();
 
