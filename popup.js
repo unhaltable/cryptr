@@ -148,6 +148,9 @@ $(document).ready(function () {
     on: {
       load: function(e, file) {
         // triggered each time the reading operation is successfully completed
+        if ($("#text").val() != "") {
+          return;
+        }
         if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) > -1 && file.size < 2 * Math.pow(1024, 2))) {
           loadedFile = { file: file, content: e.target.result };
           var fileInfo = [

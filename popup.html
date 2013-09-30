@@ -12,24 +12,24 @@
     <div id="options" title="Cryptr options"></div>
   </header>
   <article id="box">
-    <textarea class="textbox" name="text" id="text" cols="30" rows="6" placeholder="Enter text to encrypt or decrypt" autofocus></textarea>
+    <textarea class="textbox" name="text" id="text" tabindex="1" cols="30" rows="6" placeholder="Enter text to encrypt or decrypt" autofocus></textarea>
     <div id="textbtns">
-      <button id="copy" title="Copy text">Copy</button>
-      <button id="clear" title="Clear textbox">Clear</button>
+      <button id="copy" title="Copy text" tabindex="-1">Copy</button>
+      <button id="clear" title="Clear textbox" tabindex="-1">Clear</button>
     </div>
     <input type="file" id="file" multiple />
     <div id="dropzone" title="Drag and drop a file here, or click here to browse for a file.">Drop a file or click here</div>
     <output id="list"></output>
   </article>
   <article id="settings">
-    <input class="textbox" id="passphrase" type="password" placeholder="Enter a passphrase" />
-    <input id="passphrase-visible" type="checkbox" />
+    <input class="textbox" id="passphrase" type="password" placeholder="Enter a passphrase" tabindex="2" />
+    <input id="passphrase-visible" type="checkbox" tabindex="-1" />
     <label for="passphrase-visible" class="eye" title="Toggle passphrase visibility">Test</label>
-    <button id="random" title="Generate a random passphrase"></button>
+    <button id="random" title="Generate a random passphrase" tabindex="-1"></button>
   </article>
   <footer>
-    <button id="encrypt" title="Encrypt"></button>
-    <button id="decrypt" title="Decrypt"></button>
+    <button id="encrypt" title="Encrypt" tabindex="3"></button>
+    <button id="decrypt" title="Decrypt" tabindex="4"></button>
   </footer>
   <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
   <script type="text/javascript" src="filereader.js"></script>
