@@ -16,7 +16,7 @@ $(document).ready(function () {
     document.execCommand("Copy", false, null);
   }
 
-  /*
+  /**
    * Encrypt or decrypt the specified string, using the cipher saved in the options.
    * Example: processData('encrypt', 'sometext')
    * @param string action Either 'encrypt' or 'decrypt'
@@ -68,7 +68,7 @@ $(document).ready(function () {
   }
 
   $("#text").on('keyup change', function() {
-    chrome.storage.sync.set({ 'text': $(this).val() });
+    chrome.storage.local.set({ 'text': $(this).val() });
     if ($(this).val().length > 0) {
       $("#dropzone").hide();
     } else {
@@ -117,7 +117,7 @@ $(document).ready(function () {
 
   $("#clear").click(function() {
     $("#text").val("");
-    chrome.storage.sync.remove('text');
+    chrome.storage.local.remove('text');
     $("#dropzone").text("Drop a file or click here");
     loadedFile = null;
     $("#text").show();
@@ -133,11 +133,13 @@ $(document).ready(function () {
   });
 
   // Store and load previous text
-  chrome.storage.sync.get(['keep', 'text'], function (items) {
-    if (items['keep']) {
-      $("#text")
-        .val(items['text'])
-        .select();
+  chrome.storage.sync.get('keep', function (items) {
+    if (items.keep) {
+      chrome.storage.local.get('text', function (item) {
+        $("#text")
+          .val(item.text)
+          .select();
+      });
     }
   });
 
@@ -148,9 +150,7 @@ $(document).ready(function () {
     on: {
       load: function(e, file) {
         // triggered each time the reading operation is successfully completed
-        if ($("#text").val() != "") {
-          return;
-        }
+        if ($("#text").val() != "") { return; }
         if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) > -1 && file.size < 2 * Math.pow(1024, 2))) {
           loadedFile = { file: file, content: e.target.result };
           var fileInfo = [
