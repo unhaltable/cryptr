@@ -6,8 +6,6 @@ Easily encrypt and/or decrypt text or files with a simple and beautiful extensio
 This extension is powered by CryptoJS, FileReader.js, and FileSaver.js.
 APIs used include chrome.storage, chrome.contextMenus, and chrome.tabs.
 
-This was created during the UofTHacks 36-hour hackathon.
-Categories this project is entered in are:
-    Wacom - "Best Design and Graphics"
-    Freshbooks - "Best Heroes Hack"
-    Microsoft - "Most Creative Service App".
+Winner of the the 36-hour UofTHacks hackathon.
+
+You can install it from the Chrome Web Store: https://chrome.google.com/webstore/detail/cryptr/kbnaeockclnoomgnildebnoihhjnehcb
