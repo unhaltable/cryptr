@@ -1,4 +1,4 @@
-var storage = chrome.storage.sync;
+var storage = chrome.storage.local;
 
 var cipher = document.querySelector("#typevals");
 $("#typevals").change(saveOptions);
@@ -19,7 +19,7 @@ function loadSettings() {
       for (i = 0; i < arr.length; i++) {
         $("#saved").append("<li id='" + i + "'><span class='first'>" + arr[i][0] + "</span>" + arr[i][1]
                             + "<div class='del'></div></li>");
-        $('#' + i + ' .del').click(function () {
+        $('#' + i + ' .del').click(function() {
           $(this).parent().css("display", "none");
           var pos = arr.indexOf(i);
           if (~arr) arr.splice(pos, 1);
@@ -50,12 +50,19 @@ $("#save").click(function () {
   var pass = $("#pass").val();
 
   if (name == "" || pass == "") {
-    alert('Please fill in the fields!');
+    alert('Please fill in both fields!');
     return;
   }
 
   arr.push([name, pass]);
-  $("#saved").append("<li><span class='first'>" + name + "</span>" + pass + "</li>");
+  $("#saved").append("<li id='" + (arr.length - 1) + "'><span class='first'>" + name + "</span>"
+                      + pass + "<div class='del'></div></li>");
+  $('#' + (arr.length - 1) + ' .del').click(function() {
+    $(this).parent().css("display", "none");
+    var pos = arr.indexOf(i);
+    if (~arr) arr.splice(pos, 1);
+    storage.set({'pass': arr});
+  });
   storage.set({'pass': arr});
 
   $("#name").val("");

@@ -1,4 +1,5 @@
 var loadedFile; // loaded file in object: { file: File, content: File content }
+var storage = chrome.storage.local;
 
 $(document).ready(function () {
 
@@ -27,7 +28,7 @@ $(document).ready(function () {
     var d = $.Deferred();
 
     var cipher = "AES";
-    chrome.storage.sync.get(['cipher'], function (items) {
+    storage.get(['cipher'], function (items) {
       chrome.runtime.sendMessage({
         type: action,
         cipher: items['cipher'] || cipher,
@@ -68,7 +69,7 @@ $(document).ready(function () {
   }
 
   $("#text").on('keyup change', function() {
-    chrome.storage.local.set({ 'text': $(this).val() });
+    storage.set({ 'text': $(this).val() });
     if ($(this).val().length > 0) {
       $("#dropzone").hide();
     } else {
@@ -117,7 +118,7 @@ $(document).ready(function () {
 
   $("#clear").click(function() {
     $("#text").val("");
-    chrome.storage.local.remove('text');
+    storage.remove('text');
     $("#dropzone").text("Drop a file or click here");
     loadedFile = null;
     $("#text").show();
@@ -133,9 +134,9 @@ $(document).ready(function () {
   });
 
   // Store and load previous text
-  chrome.storage.sync.get('keep', function (items) {
+  storage.get('keep', function (items) {
     if (items.keep) {
-      chrome.storage.local.get('text', function (item) {
+      storage.get('text', function (item) {
         $("#text")
           .val(item.text)
           .select();
