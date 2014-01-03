@@ -1,24 +1,26 @@
-var loadedFile; // loaded file in object: { file: File, content: File content as ArrayBuffer }
+/** Loaded file in object: { file: File, content: File content as ArrayBuffer } */
+var loadedFile;
+/** Local Chrome storage for settings and such */
 var storage = chrome.storage.local;
+
 
 $(document).ready(function () {
 
   /**
-   * Generate a random 20-character password.
-   * 
-   * @return a random string of 20 characters
+   * Generate a random password.
+   * @return A passwording consisting of 20 random characters.
    */
   function randomPass() {
     var pass = "";
-    for (i = 0; i < 20; i++) {
-      var rand = Math.floor(33 + 94 * Math.random());
-      pass += String.fromCharCode(rand);
-    }
+
+    for (i = 0; i < 20; i++)
+      pass += String.fromCharCode(Math.floor(33 + 94 * Math.random()));
+
     return pass;
   }
 
   /**
-   * Copy the text in the #text element into the clipboard.
+   * Selects and copies the text into the clipboard.
    */
   function copyText() {
     document.getElementById("text").select();
@@ -159,8 +161,11 @@ $(document).ready(function () {
     });
   }
 
-  $("#text").on('keyup change', function() {
-    storage.set({ 'text': $(this).val() });
+  /**
+   * Stores written text. Hides file dropzone if text entered.
+   */
+  $("#text").on("keyup change", function() {
+    storage.set({ "text": $(this).val() });
     if ($(this).val().length > 0) {
       $("#dropzone").hide();
     } else {
@@ -203,7 +208,7 @@ $(document).ready(function () {
   });
 
   $("#options").click(function() {
-    chrome.tabs.create({ url: "options.html" });
+    chrome.tabs.create({ url: "options/options.html" });
   });
 
   $("#copy").click(function() {
@@ -215,8 +220,7 @@ $(document).ready(function () {
     storage.remove('text');
     $("#dropzone").text("Drop a file or click here");
     loadedFile = null;
-    $("#text").show();
-    $("#copy").show();
+    $("body").removeClass("file");
   });
 
   $("#passphrase-visible").change(function () {
@@ -228,7 +232,7 @@ $(document).ready(function () {
   });
 
   // Store and load previous text
-  storage.get('keep', function (items) {
+  storage.get("keep", function (items) {
     if (items.keep) {
       storage.get('text', function (item) {
         $("#text")
@@ -259,14 +263,13 @@ $(document).ready(function () {
 
           // Set #dropzone text to display the file size
           var fileInfo = [
-            escape(file.name), ' - ',
-            (file.size / 1000).toFixed(1), ' KB'
+            escape(file.name), " - ",
+            (file.size / 1000).toFixed(1), " KB"
           ].join('');
           $('#dropzone').html(fileInfo);
 
           // Hide elements related to text-only encryption
-          $("#text").hide();
-          $("#copy").hide();
+          $("body").addClass("file");
         } else {
           alert("Uploaded file is too large. Files must be less than 300 MB.");
         }
@@ -278,7 +281,7 @@ $(document).ready(function () {
   $("#file, body").fileReaderJS(fileReaderOptions);
 
   // When the dropzone is clicked, click the file input element
-  $("#dropzone").click(function () {
+  $("#dropzone").click(function() {
     $("#file").click();
   });
 

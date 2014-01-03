@@ -1,0 +1,287 @@
+@font-face { font-family: Lato; src: url("../fonts/Lato-Regular.ttf"); }
+@font-face { font-family: Lato-Light; src: url("../fonts/Lato-Light.ttf"); }
+@font-face { font-family: "Roboto Slab"; src: url("../fonts/RobotoSlab-Light.ttf"); }
+
+* {
+  font: 1em/1.2em Lato, Helvetica, "Segoe UI", Verdana, Arial, sans-serif;
+}
+
+::selection {
+  background: #7ec9d2;
+}
+
+body {
+  background: #7ec9d2;
+  color: #191f21;
+  font: 0.95em/1.4em Lato-Light;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 1em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+p {
+  font-size: 0.9em;
+}
+
+a {
+  border-bottom: 1px dotted #999;
+  color: #191f21;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+  a:hover {
+    border-color: #464646;
+    color: #464646;
+  }
+
+#content {
+  background: #cde8f3;
+  margin: 35px auto;
+  width: 520px;
+}
+
+header {
+  background: #fff;
+  border-bottom: 1px solid #9bd7de;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+  #logo {
+    background: url(../img/icon48.png) no-repeat 0 10px;
+    color: #37c3e4;
+    font: 2.6em "Roboto Slab";
+    padding: 8px 0 8px 58px;
+  }
+
+#settings {
+  border-bottom: 1px solid #9bd7de;
+}
+
+  .option {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  #dropdown {
+    display: inline-block;
+    margin: 0 0 0 10px;
+  }
+
+    #type {
+      position: relative;
+    }
+
+    #type:after {
+      color: #549298;
+      content: '>';
+      font: 0.9em Consolas, monospace;
+      padding: 0 0 2px;
+      pointer-events: none;
+      position: absolute;
+      right: 15px;
+      top: 1px;
+      -webkit-transform: rotate(90deg);
+    }
+
+    #type:before {
+      content: '';
+      display: block;
+      height: 20px;
+      pointer-events: none;
+      position: absolute;
+      right: 6px;
+      top: 0;
+      width: 20px;
+    }
+
+    #type select {
+      -webkit-appearance: none;
+      background: #e3f2f9;
+      border: 1px solid #9bd7de;
+      border-radius: 4px;
+      color: #191f21;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 0.85em;
+      outline: 0;
+      padding: 6px;
+      width: 150px;
+    }
+
+  #saved {
+    margin: 5px 0 0 0;
+    padding: 0;
+  }
+
+    #saved li {
+      font-size: 0.85em;
+      list-style: none;
+      padding: 8px 5px;
+    }
+
+    #saved li:nth-child(odd) {
+      background: #9bd7de;
+    }
+
+    #saved li:nth-child(even) {
+      background: #e3f2f9;
+    }
+
+    .first {
+      border-right: 1px solid #cde8f3;
+      display: inline-block;
+      margin-right: 10px;
+      width: 140px;
+    }
+
+    .del {
+      background: url(../img/delete@2x.png) no-repeat;
+      background-size: 16px 16px;
+      cursor: pointer;
+      display: block;
+      float: right;
+      height: 16px;
+      margin: 0 5px 0 0;
+      opacity: 0.5;
+      text-align: center;
+      width: 16px;
+    }
+
+      .del:hover {
+        opacity: 1;
+      }
+
+  #addpass {
+    background: #cee6e9;
+    border-top: 1px solid #7ec9d2;
+    padding: 2px 5px;
+  }
+
+    #addpass input {
+      background: transparent;
+      border: 0;
+      outline: 0;
+    }
+
+    #name {
+      width: 148px;
+    }
+
+    #pass {
+      width: 250px;
+    }
+
+    #save {
+      background: transparent;
+      border: 1px solid #7ec9d2;
+      border-radius: 4px;
+      color: #666;
+      cursor: pointer;
+      font-size: 0.85em ;
+      padding: 5px 15px;
+      transition: all 0.15s;
+    }
+
+      #save:hover {
+        background: #7ec9d2;
+        color: #eee;
+      }
+
+article, aside {
+  padding: 0 20px;
+}
+
+article {
+  border-bottom: 1px solid #9bd7de;
+}
+
+  #devs, #devs a {
+    border: 0;
+    text-align: center;
+  }
+
+  .dev {
+    border-radius: 5px;
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 10px 0;
+    transition: all 0.15s;
+    width: 24%;
+  }
+
+  .dev:hover {
+    background: #fff;
+  }
+
+  .dev img {
+    border-radius: 100%;
+    height: 80px;
+    margin-bottom: 15px;
+    width: 80px;
+  }
+
+  #dev1 {
+    -webkit-animation: fadeInUp 0.25s;
+  }
+
+  #dev2 {
+    -webkit-animation: fadeInUp 0.4s;
+  }
+
+  #dev3 {
+    -webkit-animation: fadeInUp 0.55s;
+  }
+
+  #dev4 {
+    -webkit-animation: fadeInUp 0.7s;
+  }
+
+aside {
+  padding: 15px;
+  text-align: center;
+}
+
+  #bitcoin-address {
+    border: 0;
+    display: block;
+    font-family: Consolas, monospace;
+    margin-top: 10px;
+  }
+
+footer {
+  background: #fff;
+  font-style: italic;
+  padding: 15px;
+  text-align: center;
+}
+
+  footer p {
+    font-size: 0.9em;
+    margin: 0 0 15px 0;
+  }
+
+  #hacks {
+    background: url(../img/uofthacks@2x.png) no-repeat;
+    background-size: 187px 90px;
+    border: 0;
+    display: block;
+    height: 45px;
+    margin: auto;
+    width: 187px;
+  }
+
+    #hacks:hover {
+      background-position: 0 100%;
+    }
+
+@-webkit-keyframes fadeInUp {
+  0% { -webkit-transform: translateY(20px); opacity: 0; }
+  100% { -webkit-transform: translateY(0); opacity: 1; }
+}
