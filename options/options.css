@@ -1,6 +1,6 @@
-@font-face { font-family: Lato; src: url("fonts/Lato-Regular.ttf"); }
-@font-face { font-family: Lato-Light; src: url("fonts/Lato-Light.ttf"); }
-@font-face { font-family: "Roboto Slab"; src: url("fonts/RobotoSlab-Light.ttf"); }
+@font-face { font-family: Lato; src: url("../fonts/Lato-Regular.ttf"); }
+@font-face { font-family: Lato-Light; src: url("../fonts/Lato-Light.ttf"); }
+@font-face { font-family: "Roboto Slab"; src: url("../fonts/RobotoSlab-Light.ttf"); }
 
 * {
   font: 1em/1.2em Lato, Helvetica, "Segoe UI", Verdana, Arial, sans-serif;
