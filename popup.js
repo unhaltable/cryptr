@@ -109,7 +109,7 @@ $(document).ready(function () {
   });
 
   $("#options").click(function() {
-    chrome.tabs.create({ url: "options.html" });
+    chrome.tabs.create({ url: "options/options.html" });
   });
 
   $("#copy").click(function() {

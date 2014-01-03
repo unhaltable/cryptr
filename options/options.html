@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cryptr Options</title>
+  <link rel="stylesheet" type="text/css" href="options.css">
+  <link rel="stylesheet" type="text/css" href="scrollbar.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+  <div id="content">
+    <header>
+      <span id="logo">Cryptr</span>
+    </header>
+    <article id="settings">
+      <h1>Settings</h1>
+      <div class="option">
+        <label>
+          <input type="checkbox" id="keep" />
+          Remember text after closing window
+        </label>
+      </div>
+      <div class="option">
+        Encryption cipher:
+        <div id="dropdown">
+          <label id="type">
+            <select id="typevals" title="Cipher type">
+              <option value="AES">AES</option>
+              <option value="DES">DES</option>
+              <option value="TripleDES">Triple DES</option>
+              <option value="Rabbit">Rabbit</option>
+              <option value="RC4">RC4</option>
+              <option value="RC4Drop">RC4Drop</option>
+            </select>
+          </label>​
+        </div>
+      </div>
+      <div class="option">
+        Saved passphrases:
+        <ul id="saved"></ul>
+        <div id="addpass">
+          <input type="text" id="name" placeholder="Name" />
+          <input type="text" id="pass" placeholder="Passphrase" />
+          <button id="save">Save</button>
+        </div>
+      </div>
+    </article>
+    <article>
+      <h1>About</h1>
+      <p>Built by:</p>
+      <div id="devs">
+        <a href="https://twitter.com/spe_">
+          <div class="dev" id="dev1">
+            <img src="../img/spencer.jpg" alt="Photo" />
+            Spencer Elliott
+          </div>
+        </a>
+        <a href="https://twitter.com/arkon">
+          <div class="dev" id="dev2">
+            <img src="../img/eugene.jpg" alt="Photo" />
+            Eugene Cheung
+          </div>
+        </a>
+        <a href="https://twitter.com/RealUofTHacks">
+          <div class="dev" id="dev3">
+            <img src="../img/philippe.jpg" alt="Photo" />
+            Phillipe Bareau
+          </div>
+        </a>
+        <a href="https://twitter.com/NickGoh_">
+          <div class="dev" id="dev4">
+            <img src="../img/nick.jpg" alt="Photo" />
+            Nicholas Goh
+          </div>
+        </a>
+      </div>
+      <p>This extension is powered by <a href="https://code.google.com/p/crypto-js/">CryptoJS</a>, <a href="http://bgrins.github.io/filereader.js/">FileReader.js</a>, and <a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a>.</p>
+      <p>With thanks to <a href="http://uofthacks.com">UofTHacks</a> and <a href="https://www.twitter.com/jeffshin">Jeff Shin</a>.</p>
+      <p>Officially approved by <a href="https://www.twitter.com/RealUofTHacks">@RealUofTHacks</a>.</p>
+    </article>
+    <aside>
+      Support us! Donate to Bitcoin address:
+      <span id="bitcoin-address">14ng36zThq5dq2WyDwi4dnga6FmqPp2RKa</span>
+    </aside>
+    <footer>
+      <p>Overall #1 hack at:</p>
+      <a href="http://uofthacks.com" id="hacks"></a>
+    </footer>
+  </div>
+  <script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+  <script type="text/javascript" src="options.js"></script>
+</body>
+</html>
