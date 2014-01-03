@@ -19,6 +19,9 @@ $(document).ready(function () {
     return pass;
   }
 
+  /**
+   * Selects and copies the text into the clipboard.
+   */
   function copyText() {
     document.getElementById("text").select();
     document.execCommand("Copy", false, null);
@@ -35,10 +38,11 @@ $(document).ready(function () {
     var d = $.Deferred();
 
     var cipher = "AES";
-    storage.get(['cipher'], function (items) {
+
+    storage.get("cipher", function (items) {
       chrome.runtime.sendMessage({
         type: action,
-        cipher: items['cipher'] || cipher,
+        cipher: items.cipher || cipher,
         text: text,
         passphrase: $("#passphrase").val()
       }, function(response) {
@@ -50,11 +54,11 @@ $(document).ready(function () {
   }
 
   function encryptAndDownloadFile() {
-    processData('encrypt', loadedFile.content).done(function (ciphertext) {
+    processData('encrypt', loadedFile.content).done(function (cipherText) {
       var jsonString = JSON.stringify({
         name: loadedFile.file.name,
         type: loadedFile.file.type,
-        text: ciphertext
+        text: cipherText
       });
       var blob = new Blob([jsonString]);
       // call saveAs, part of FileSaver.js
@@ -64,19 +68,23 @@ $(document).ready(function () {
 
   function decryptAndDownloadFile() {
     var fileInfo = JSON.parse(loadedFile.content);
-    processData('decrypt', fileInfo.text).done(function (plaintext) {
-      var arrayBuffer = new ArrayBuffer(plaintext.length);
+
+    processData('decrypt', fileInfo.text).done(function (plainText) {
+      var arrayBuffer = new ArrayBuffer(plainText.length);
       var arrayBufferView = new Uint8Array(arrayBuffer);
-      for (var i = 0; i < plaintext.length; i++) {
-        arrayBufferView[i] = plaintext.charCodeAt(i);
+      for (var i = 0; i < plainText.length; i++) {
+        arrayBufferView[i] = plainText.charCodeAt(i);
       }
       var blob = new Blob([arrayBuffer], { type: fileInfo.type });
       saveAs(blob, fileInfo.name);
     });
   }
 
-  $("#text").on('keyup change', function() {
-    storage.set({ 'text': $(this).val() });
+  /**
+   * Stores written text. Hides file dropzone if text entered.
+   */
+  $("#text").on("keyup change", function() {
+    storage.set({ "text": $(this).val() });
     if ($(this).val().length > 0) {
       $("#dropzone").hide();
     } else {
@@ -88,8 +96,8 @@ $(document).ready(function () {
     if (loadedFile) {
       encryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
-      processData('encrypt', $("#text").val()).done(function (ciphertext) {
-        $("#text").val(ciphertext);
+      processData('encrypt', $("#text").val()).done(function (cipherText) {
+        $("#text").val(cipherText);
         copyText();
       });
     } else {
@@ -101,8 +109,8 @@ $(document).ready(function () {
     if (loadedFile) {
       decryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
-      processData('decrypt', $("#text").val()).done(function (plaintext) {
-        $("#text").val(plaintext);
+      processData('decrypt', $("#text").val()).done(function (plainText) {
+        $("#text").val(plainText);
       });
     } else {
       alert("Please enter either text or a file.");
@@ -140,7 +148,7 @@ $(document).ready(function () {
   });
 
   // Store and load previous text
-  storage.get('keep', function (items) {
+  storage.get("keep", function (items) {
     if (items.keep) {
       storage.get('text', function (item) {
         $("#text")
@@ -153,7 +161,7 @@ $(document).ready(function () {
   var fileReaderOptions = {
     dragClass: "drag",
     accept: false,
-    readAsDefault: 'BinaryString',
+    readAsDefault: "BinaryString",
     on: {
       load: function(e, file) {
         // triggered each time the reading operation is successfully completed
@@ -161,11 +169,11 @@ $(document).ready(function () {
         if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) > -1 && file.size < 2 * Math.pow(1024, 2))) {
           loadedFile = { file: file, content: e.target.result };
           var fileInfo = [
-            escape(file.name), ' - ',
-            (file.size / 1000).toFixed(1), ' KB'
+            escape(file.name), " - ",
+            (file.size / 1000).toFixed(1), " KB"
           ].join('');
           $('#dropzone').html(fileInfo);
-          $('body').addClass('file');
+          $("body").addClass("file");
         } else {
           alert("Uploaded file is too large. Files must be less than 1 MB.");
         }
@@ -174,7 +182,8 @@ $(document).ready(function () {
   };
 
   $("#file, body, .lightbox, .lightbox-faded").fileReaderJS(fileReaderOptions);
-  $("#dropzone").click(function () {
+
+  $("#dropzone").click(function() {
     $("#file").click();
   });
 

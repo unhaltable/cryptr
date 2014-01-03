@@ -249,6 +249,7 @@ aside {
 }
 
   #bitcoin-address {
+    border: 0;
     display: block;
     font-family: Consolas, monospace;
     margin-top: 10px;
@@ -267,7 +268,8 @@ footer {
   }
 
   #hacks {
-    background: url(../img/uofthacks.jpg) no-repeat;
+    background: url(../img/uofthacks@2x.png) no-repeat;
+    background-size: 187px 90px;
     border: 0;
     display: block;
     height: 45px;
