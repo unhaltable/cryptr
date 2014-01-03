@@ -65,7 +65,8 @@ header {
   }
 
   #options {
-    background: #d8d8d8 url(../img/settings.png) no-repeat 4px 4px;
+    background: #d8d8d8 url(../img/options@2x.png) no-repeat 4px 4px;
+    background-size: 10px 10px;
     border-radius: 100%;
     color: #fff;
     cursor: pointer;
@@ -209,7 +210,8 @@ header {
     }
 
   #random {
-    background: #cee6e9 url(../img/random.png) no-repeat 4px 8px;
+    background: #cee6e9 url(../img/random@2x.png) no-repeat 5px 6px;
+    background-size: 16px 16px;
     border-radius: 5px;
     border: 0;
     color: #373737;

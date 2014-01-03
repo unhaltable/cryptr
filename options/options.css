@@ -142,7 +142,8 @@ header {
     }
 
     .del {
-      background: url(../img/remove.png) no-repeat;
+      background: url(../img/delete@2x.png) no-repeat;
+      background-size: 16px 16px;
       cursor: pointer;
       display: block;
       float: right;
