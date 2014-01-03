@@ -21,7 +21,7 @@ function launchPopup(callback) {
     var width = screen.width - 350;
     var height = screen.height / 2 - 440 / 2;
     chrome.windows.create({
-      url: chrome.extension.getURL('popup.html'),
+      url: chrome.extension.getURL('popup/popup.html'),
       type: 'popup',
       top: height,
       left: width,
@@ -62,7 +62,7 @@ chrome.windows.onFocusChanged.addListener(function (newWindowId) {
   }, function (windows) {
     for (var i = 0; i < windows.length; i++) {
       // If the Cryptr popup is not focused
-      if (!windows[i].focused && windows[i].type == "popup" && windows[i].tabs[0].url == chrome.extension.getURL('popup.html')) {
+      if (!windows[i].focused && windows[i].type == "popup" && windows[i].tabs[0].url == chrome.extension.getURL('popup/popup.html')) {
         for (var j = 0; j < windows.length; j++) {
           // If another normal window is focused
           if (windows[j].focused && windows[j].type == "normal") {

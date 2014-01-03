@@ -1,14 +1,21 @@
-var loadedFile; // loaded file in object: { file: File, content: File content }
+/** Loaded file in object: { file: File, content: File content } */
+var loadedFile;
+/** Local Chrome storage for settings and such */
 var storage = chrome.storage.local;
+
 
 $(document).ready(function () {
 
+  /**
+   * Generate a random password.
+   * @return A passwording consisting of 20 random characters.
+   */
   function randomPass() {
     var pass = "";
-    for (i = 0; i < 20; i++) {
-      var rand = Math.floor(33 + 94 * Math.random());
-      pass += String.fromCharCode(rand);
-    }
+
+    for (i = 0; i < 20; i++)
+      pass += String.fromCharCode(Math.floor(33 + 94 * Math.random()));
+
     return pass;
   }
 
