@@ -21,6 +21,17 @@ body {
   width: 100%;
 }
 
+/* Hide text box and copy button if dealing with file */
+.file #text, .file #copy {
+  display: none;
+}
+
+  /* Make clear button full width */
+  .file #textbtns, .file #clear {
+    border-radius: 5px;
+    width: 100%;
+  }
+
 /* Outline colour */
 .textbox, button  {
   outline-color: #7ec9d2 !important;
@@ -50,9 +61,9 @@ header {
 
   #logo {
     background: url(img/icon48.png) no-repeat;
-    background-size: auto 90%;
+    background-size: auto 43px;
     font: 2em/2em "Roboto Slab";
-    padding: 0 0 0 45px;
+    padding: 0 0 0 50px;
   }
 
   #options {

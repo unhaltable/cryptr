@@ -121,8 +121,7 @@ $(document).ready(function () {
     storage.remove('text');
     $("#dropzone").text("Drop a file or click here");
     loadedFile = null;
-    $("#text").show();
-    $("#copy").show();
+    $("body").removeClass("file");
   });
 
   $("#passphrase-visible").change(function () {
@@ -159,8 +158,7 @@ $(document).ready(function () {
             (file.size / 1000).toFixed(1), ' KB'
           ].join('');
           $('#dropzone').html(fileInfo);
-          $("#text").hide();
-          $("#copy").hide();
+          $('body').addClass('file');
         } else {
           alert("Uploaded file is too large. Files must be less than 1 MB.");
         }
