@@ -1,17 +1,5 @@
-function encrypt(cipher, plaintext, passphrase) {
-  return CryptoJS[cipher].encrypt(plaintext, passphrase).toString();
-}
-
-function decrypt(cipher, ciphertext, passphrase) {
-  return CryptoJS[cipher].decrypt(ciphertext, passphrase).toString(CryptoJS.enc.Utf8);
-}
-
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  if (message.type == "encrypt") {
-    sendResponse(encrypt(message.cipher, message.text, message.passphrase));
-  } else if (message.type == "decrypt") {
-    sendResponse(decrypt(message.cipher, message.text, message.passphrase));
-  } else if (message.type == "launchPopup") {
+  if (message.type == "launchPopup") {
     launchPopup();
   }
 });
@@ -56,21 +44,21 @@ chrome.browserAction.onClicked.addListener(function () {
 });
 
 // Close the popup window if another Chrome window gains focus
-chrome.windows.onFocusChanged.addListener(function (newWindowId) {
-  chrome.windows.getAll({
-    populate: true
-  }, function (windows) {
-    for (var i = 0; i < windows.length; i++) {
-      // If the Cryptr popup is not focused
-      if (!windows[i].focused && windows[i].type == "popup" && windows[i].tabs[0].url == chrome.extension.getURL('popup.html')) {
-        for (var j = 0; j < windows.length; j++) {
-          // If another normal window is focused
-          if (windows[j].focused && windows[j].type == "normal") {
-            // close the Cryptr window
-            chrome.windows.remove(windows[i].id);
-          }
-        }
-      }
-    }
-  });
-});
+// chrome.windows.onFocusChanged.addListener(function (newWindowId) {
+//   chrome.windows.getAll({
+//     populate: true
+//   }, function (windows) {
+//     for (var i = 0; i < windows.length; i++) {
+//       // If the Cryptr popup is not focused
+//       if (!windows[i].focused && windows[i].type == "popup" && windows[i].tabs[0].url == chrome.extension.getURL('popup.html')) {
+//         for (var j = 0; j < windows.length; j++) {
+//           // If another normal window is focused
+//           if (windows[j].focused && windows[j].type == "normal") {
+//             // close the Cryptr window
+//             chrome.windows.remove(windows[i].id);
+//           }
+//         }
+//       }
+//     }
+//   });
+// });

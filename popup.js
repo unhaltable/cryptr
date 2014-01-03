@@ -1,8 +1,13 @@
-var loadedFile; // loaded file in object: { file: File, content: File content }
+var loadedFile; // loaded file in object: { file: File, content: File content as ArrayBuffer }
 var storage = chrome.storage.local;
 
 $(document).ready(function () {
 
+  /**
+   * Generate a random 20-character password.
+   * 
+   * @return a random string of 20 characters
+   */
   function randomPass() {
     var pass = "";
     for (i = 0; i < 20; i++) {
@@ -12,59 +17,145 @@ $(document).ready(function () {
     return pass;
   }
 
+  /**
+   * Copy the text in the #text element into the clipboard.
+   */
   function copyText() {
     document.getElementById("text").select();
     document.execCommand("Copy", false, null);
   }
 
   /**
-   * Encrypt or decrypt the specified string, using the cipher saved in the options.
-   * Example: processData('encrypt', 'sometext')
-   * @param string action Either 'encrypt' or 'decrypt'
-   * @param string text The text to be encrypted or decrypted
-   * @return A jQuery promise
+   * Get the cipher saved in the options.
+   *
+   * @return A jQuery promise that's resolved with the cipher string
    */
-  function processData(action, text) {
+  function getCipher() {
     var d = $.Deferred();
 
-    var cipher = "AES";
     storage.get(['cipher'], function (items) {
-      chrome.runtime.sendMessage({
-        type: action,
-        cipher: items['cipher'] || cipher,
-        text: text,
-        passphrase: $("#passphrase").val()
-      }, function(response) {
-        d.resolve(response);
-      });
+      d.resolve(items['cipher'] || "AES");
     });
 
     return d.promise();
   }
 
+  function uint8ArrayToString(uint8View) {
+    return String.fromCharCode.apply(null, uint8View);
+  }
+
+  function stringToUint8Array(string) {
+    var uint8View = new Uint8Array(string.length);
+    for (var i = 0, strLen = string.length; i < strLen; i++) {
+      uint8View[i] = string.charCodeAt(i);
+    }
+    return uint8View;
+  }
+
+  function wordArrayToArrayBuffer(wordArray) {
+    // Create buffer
+    var arrayBuffer = new ArrayBuffer(wordArray.sigBytes);
+    var uint8View = new Uint8Array(arrayBuffer);
+
+    // Copy data into buffer
+    for (var i = 0; i < wordArray.sigBytes; i++) {
+      uint8View[i] = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+    }
+
+    return arrayBuffer;
+  }
+
+  /*
+   * Encrypt a ArrayBuffer with the given cipher and passphrase
+   *
+   * @param cipher one of 'AES', 'DES', 'TripleDES', 'Rabbit', 'RC4', or 'RC4Drop'
+   * @param plaintextArrayBuffer the ArrayBuffer to be encrypted
+   * @param passphrase the string to use to encrypt the plaintext
+   * @return a ArrayBuffer of the encrypted data
+   */
+  function encryptArrayBuffer(cipher, plaintextArrayBuffer, passphrase) {
+    var plainWordArray = CryptoJS.lib.WordArray.create(new Uint8Array(plaintextArrayBuffer));
+    var cipherParams = CryptoJS[cipher].encrypt(plainWordArray, passphrase);
+
+    // Make an ArrayBuffer of the ciphertext
+    var ciphertextArrayBuffer = new Uint8Array(wordArrayToArrayBuffer(cipherParams.ciphertext));
+
+    // Goal: Put cipherParams.iv.toString() and cipherParams.salt.toString() into ciphertextArrayBuffer
+
+    // Assuming iv size is always 32 bytes: 32 hex characters
+    // Assuming salt size is always 16 bytes: 16 hex characters
+    var ivSaltArrayBuffer = new Uint8Array(32 + 16);
+    ivSaltArrayBuffer.set(stringToUint8Array(cipherParams.iv.toString()));
+    ivSaltArrayBuffer.set(stringToUint8Array(cipherParams.salt.toString()), 32);
+
+    // Concatenate the two ArrayBuffers, storing iv and salt in the last 32 + 16 = 48 bytes
+    var arrayBuffer = new ArrayBuffer(ciphertextArrayBuffer.length + ivSaltArrayBuffer.length);
+    var uint8View = new Uint8Array(arrayBuffer);
+    uint8View.set(ciphertextArrayBuffer);
+    uint8View.set(ivSaltArrayBuffer, ciphertextArrayBuffer.length);
+
+    return arrayBuffer;
+  }
+
+  /*
+   * Decrypt a ArrayBuffer with the given cipher and passphrase
+   *
+   * @param cipher one of 'AES', 'DES', 'TripleDES', 'Rabbit', 'RC4', or 'RC4Drop'
+   * @param ciphertextArrayBuffer the ArrayBuffer to be decrypted
+   * @param passphrase the string to use to decrypt the plaintext
+   * @return a ArrayBuffer of the decrypted data
+   */
+  function decryptArrayBuffer(cipher, ciphertextArrayBuffer, passphrase) {
+    // Assuming iv and salt are stored in the last 32 + 16 = 48 bytes
+    var ciphertextView = new Uint8Array(ciphertextArrayBuffer, 0, ciphertextArrayBuffer.byteLength - 48);
+    var ivView = new Uint8Array(ciphertextArrayBuffer, ciphertextArrayBuffer.byteLength - 48, 32);
+    var saltView = new Uint8Array(ciphertextArrayBuffer, ciphertextArrayBuffer.byteLength - 48 + 32, 16);
+
+    // Create the CipherParams
+    var cipherParams = CryptoJS.lib.CipherParams.create({
+      ciphertext: CryptoJS.lib.WordArray.create(ciphertextView),
+      iv: CryptoJS.enc.Hex.parse(uint8ArrayToString(ivView)),
+      salt: CryptoJS.enc.Hex.parse(uint8ArrayToString(saltView))
+    });
+
+    // Decrypt to get a wordArray of the plaintext
+    var plainWordArray = CryptoJS[cipher].decrypt(cipherParams, passphrase);
+
+    // Return an array buffer
+    return wordArrayToArrayBuffer(plainWordArray);
+  }
+
+  function encryptString(cipher, plaintext, passphrase) {
+    return CryptoJS[cipher].encrypt(plaintext, passphrase).toString();
+  }
+
+  function decryptString(cipher, ciphertext, passphrase) {
+    return CryptoJS[cipher].decrypt(ciphertext, passphrase).toString(CryptoJS.enc.Utf8);
+  }
+
   function encryptAndDownloadFile() {
-    processData('encrypt', loadedFile.content).done(function (ciphertext) {
-      var jsonString = JSON.stringify({
-        name: loadedFile.file.name,
-        type: loadedFile.file.type,
-        text: ciphertext
-      });
-      var blob = new Blob([jsonString]);
+    getCipher().done(function (cipher) {
+      var ciphertext = encryptArrayBuffer(cipher, loadedFile.content, $("#passphrase").val());
+
+      // TODO: Figure out a way to put the file metadata into the encrypted blob
+      // var jsonString = JSON.stringify({
+      //   name: loadedFile.file.name,
+      //   type: loadedFile.file.type,
+      //   data: ciphertext
+      // });
+
+      var blob = new Blob([ciphertext], { type: loadedFile.file.type });
       // call saveAs, part of FileSaver.js
       saveAs(blob, loadedFile.file.name + '.cryptr');
     });
   }
 
   function decryptAndDownloadFile() {
-    var fileInfo = JSON.parse(loadedFile.content);
-    processData('decrypt', fileInfo.text).done(function (plaintext) {
-      var arrayBuffer = new ArrayBuffer(plaintext.length);
-      var arrayBufferView = new Uint8Array(arrayBuffer);
-      for (var i = 0; i < plaintext.length; i++) {
-        arrayBufferView[i] = plaintext.charCodeAt(i);
-      }
-      var blob = new Blob([arrayBuffer], { type: fileInfo.type });
-      saveAs(blob, fileInfo.name);
+    getCipher().done(function (cipher) {
+      var plaintext = decryptArrayBuffer(cipher, loadedFile.content, $("#passphrase").val());
+      var blob = new Blob([plaintext], { type: loadedFile.file.type });
+      var fileName = loadedFile.file.name.match(/^(?:(?!.cryptr).)*/g)[0];
+      saveAs(blob, fileName);
     });
   }
 
@@ -81,7 +172,8 @@ $(document).ready(function () {
     if (loadedFile) {
       encryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
-      processData('encrypt', $("#text").val()).done(function (ciphertext) {
+      getCipher().done(function (cipher) {
+        var ciphertext = encryptString(cipher, $("#text").val(), $("#passphrase").val());
         $("#text").val(ciphertext);
         copyText();
       });
@@ -94,8 +186,10 @@ $(document).ready(function () {
     if (loadedFile) {
       decryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
-      processData('decrypt', $("#text").val()).done(function (plaintext) {
+      getCipher().done(function (cipher) {
+        var plaintext = decryptString(cipher, $("#text").val(), $("#passphrase").val());
         $("#text").val(plaintext);
+        copyText();
       });
     } else {
       alert("Please enter either text or a file.");
@@ -147,28 +241,43 @@ $(document).ready(function () {
   var fileReaderOptions = {
     dragClass: "drag",
     accept: false,
-    readAsDefault: 'BinaryString',
+    readAsDefault: 'ArrayBuffer',
     on: {
       load: function(e, file) {
         // triggered each time the reading operation is successfully completed
-        if ($("#text").val() != "") { return; }
-        if (file.size < Math.pow(1024, 2) || (file.name.search(/^.*\.cryptr$/g) > -1 && file.size < 2 * Math.pow(1024, 2))) {
+
+        // 300 MiB
+        var fileSizeLimit = 300 * Math.pow(2, 20);
+
+        if ($("#text").val() != "") { 
+          // Text has been input; don't load the file
+          return;
+        }
+
+        if (file.size < fileSizeLimit || (file.name.search(/^.*\.cryptr$/g) > -1 && file.size < fileSizeLimit)) {
           loadedFile = { file: file, content: e.target.result };
+
+          // Set #dropzone text to display the file size
           var fileInfo = [
             escape(file.name), ' - ',
             (file.size / 1000).toFixed(1), ' KB'
           ].join('');
           $('#dropzone').html(fileInfo);
+
+          // Hide elements related to text-only encryption
           $("#text").hide();
           $("#copy").hide();
         } else {
-          alert("Uploaded file is too large. Files must be less than 1 MB.");
+          alert("Uploaded file is too large. Files must be less than 300 MB.");
         }
       }
     }
   };
 
-  $("#file, body, .lightbox, .lightbox-faded").fileReaderJS(fileReaderOptions);
+  // Activate FileReader using the #file input element and body for drag-and-drop events
+  $("#file, body").fileReaderJS(fileReaderOptions);
+
+  // When the dropzone is clicked, click the file input element
   $("#dropzone").click(function () {
     $("#file").click();
   });
