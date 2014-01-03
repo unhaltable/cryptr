@@ -1,8 +1,1 @@
-::-webkit-scrollbar, ::-webkit-scrollbar-corner { background: #e0e0e0; }
-::-webkit-scrollbar:vertical { width: 7px; padding: 1px; }
-::-webkit-scrollbar:horizontal { height: 7px; }
-::-webkit-scrollbar-track:vertical { padding: 1px; }
-::-webkit-scrollbar-thumb:vertical { min-height:40px; background-color: #999; border: 1px solid #e0e0e0; border-radius: 4px; }
-::-webkit-scrollbar-thumb:vertical:hover, ::-webkit-scrollbar-thumb:horizontal:hover { background-color: #818181; border: 1px solid #818181; }
-::-webkit-scrollbar-thumb:vertical:active, ::-webkit-scrollbar-thumb:horizontal:active { background-color: #666;  }
-::-webkit-scrollbar-thumb:horizontal { min-width: 50px; background: #777; border-radius: 4px; }
+::-webkit-scrollbar,::-webkit-scrollbar-corner{background:#e0e0e0}::-webkit-scrollbar:vertical{width:7px;padding:1px}::-webkit-scrollbar:horizontal{height:7px}::-webkit-scrollbar-track:vertical{padding:1px}::-webkit-scrollbar-thumb:vertical{min-height:40px;background-color:#999;border:1px solid #e0e0e0;border-radius:4px}::-webkit-scrollbar-thumb:horizontal:hover,::-webkit-scrollbar-thumb:vertical:hover{background-color:#818181;border:1px solid #818181}::-webkit-scrollbar-thumb:horizontal:active,::-webkit-scrollbar-thumb:vertical:active{background-color:#666}::-webkit-scrollbar-thumb:horizontal{min-width:50px;background:#777;border-radius:4px}

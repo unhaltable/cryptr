@@ -1,14 +1,14 @@
 /** Loaded file in object: { file: File, content: File content as ArrayBuffer } */
 var loadedFile;
-/** Local Chrome storage for settings and such */
+/** Local Chrome storage for settings and such. */
 var storage = chrome.storage.local;
 
 
 $(document).ready(function () {
 
   /**
-   * Generate a random password.
-   * @return A passwording consisting of 20 random characters.
+   * Generates and returns a random password.
+   * @return A password consisting of 20 random characters.
    */
   function randomPass() {
     var pass = "";
@@ -20,7 +20,7 @@ $(document).ready(function () {
   }
 
   /**
-   * Selects and copies the text into the clipboard.
+   * Copies the text in the #text element into the clipboard.
    */
   function copyText() {
     document.getElementById("text").select();
@@ -28,15 +28,14 @@ $(document).ready(function () {
   }
 
   /**
-   * Get the cipher saved in the options.
-   *
-   * @return A jQuery promise that's resolved with the cipher string
+   * Gets the cipher saved in the options.
+   * @return A jQuery promise that's resolved with the cipher string.
    */
   function getCipher() {
     var d = $.Deferred();
 
-    storage.get(['cipher'], function (items) {
-      d.resolve(items['cipher'] || "AES");
+    storage.get("cipher", function (items) {
+      d.resolve(items.cipher || "AES");
     });
 
     return d.promise();
@@ -68,12 +67,12 @@ $(document).ready(function () {
   }
 
   /*
-   * Encrypt a ArrayBuffer with the given cipher and passphrase
+   * Encrypt an ArrayBuffer with the given cipher and passphrase
    *
-   * @param cipher one of 'AES', 'DES', 'TripleDES', 'Rabbit', 'RC4', or 'RC4Drop'
-   * @param plaintextArrayBuffer the ArrayBuffer to be encrypted
-   * @param passphrase the string to use to encrypt the plaintext
-   * @return a ArrayBuffer of the encrypted data
+   * @param cipher One of 'AES', 'DES', 'TripleDES', 'Rabbit', 'RC4', or 'RC4Drop'.
+   * @param plaintextArrayBuffer The ArrayBuffer to be encrypted.
+   * @param passphrase The string to use to encrypt the plaintext.
+   * @return An ArrayBuffer of the encrypted data.
    */
   function encryptArrayBuffer(cipher, plaintextArrayBuffer, passphrase) {
     var plainWordArray = CryptoJS.lib.WordArray.create(new Uint8Array(plaintextArrayBuffer));
@@ -178,7 +177,9 @@ $(document).ready(function () {
       encryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
       getCipher().done(function (cipher) {
+        console.log(cipher);
         var ciphertext = encryptString(cipher, $("#text").val(), $("#passphrase").val());
+        console.log(ciphertext);
         $("#text").val(ciphertext);
         copyText();
       });
@@ -216,6 +217,7 @@ $(document).ready(function () {
   });
 
   $("#clear").click(function() {
+    $("#dropzone").show();
     $("#text").val("");
     storage.remove('text');
     $("#dropzone").text("Drop a file or click here");
@@ -253,7 +255,7 @@ $(document).ready(function () {
         // 300 MiB
         var fileSizeLimit = 300 * Math.pow(2, 20);
 
-        if ($("#text").val() != "") { 
+        if ($("#text").val() != "") {
           // Text has been input; don't load the file
           return;
         }
