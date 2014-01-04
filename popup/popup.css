@@ -249,19 +249,21 @@ footer {
     }
 
   #encrypt {
-    background-image: url(../img/en.jpg);
+    background-image: url(../img/en@2x.png);
+    background-size: 19px 22px;
     background-position: 50% 8px;
   }
 
     #encrypt:hover {
-      background-image: url(../img/en_hover.jpg);
+      background-image: url(../img/en_hover@2x.png);
     }
 
   #decrypt {
-    background-image: url(../img/de.jpg);
+    background-image: url(../img/de@2x.png);
+    background-size: 19px 25px;
     background-position: 50% 5px;
   }
 
     #decrypt:hover {
-      background-image: url(../img/de_hover.jpg);
+      background-image: url(../img/de_hover@2x.png);
     }

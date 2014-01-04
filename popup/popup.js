@@ -177,9 +177,7 @@ $(document).ready(function () {
       encryptAndDownloadFile(file);
     } else if ($("#text").val().length) {
       getCipher().done(function (cipher) {
-        console.log(cipher);
         var ciphertext = encryptString(cipher, $("#text").val(), $("#passphrase").val());
-        console.log(ciphertext);
         $("#text").val(ciphertext);
         copyText();
       });

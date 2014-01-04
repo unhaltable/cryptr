@@ -1,8 +1,10 @@
 {
   "name": "Cryptr",
+  "short_name": "Cryptr",
   "version": "1.2",
-  "description": "Easy encryption.",
+  "description": "Keep your data safe with easy encryption.",
   "manifest_version": 2,
+  "permissions": [ "storage", "contextMenus", "tabs" ],
   "options_page": "options/options.html",
   "background": {
     "scripts": [
@@ -14,10 +16,7 @@
       "script.js"
     ]
   },
-  "browser_action": {
-    "default_icon": "img/icon19.png"
-  },
-  "permissions": [ "storage", "contextMenus", "tabs" ],
+  "browser_action": { "default_icon": "img/icon19.png" },
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
@@ -25,9 +24,6 @@
       }
     }
   },
-  "icons": {
-    "16": "img/icon16.png",
-    "48": "img/icon48.png",
-    "128": "img/icon128.png"
-  }
+  "icons": { "16": "img/icon16.png", "48": "img/icon48.png", "128": "img/icon128.png" },
+  "homepage_url": "http://www.cryptr.ca/"
 }
